@@ -41,19 +41,35 @@ def update_cloudflare_dns(ip_list, api_token, zone_id, subdomain, domain):
         'Content-Type': 'application/json',
     }
     record_name = domain if subdomain == '@' else f'{subdomain}.{domain}'
-    for ip in ip_list:
-        data = {
+    if ip_list:
+        ip = ip_list[0]
+         data = {
             "type": "A",
             "name": record_name,
             "content": ip,
             "ttl": 1,
             "proxied": False
-        }
+        }        
         response = requests.post(f'https://api.cloudflare.com/client/v4/zones/{zone_id}/dns_records', json=data, headers=headers)
         if response.status_code == 200:
             print(f"Add {subdomain}:{ip}")
         else:
             print(f"Failed to add A record for IP {ip} to subdomain {subdomain}: {response.status_code} {response.text}")
+    else:
+        print(f"ip list is empty，not update dns record")
+    #for ip in ip_list:
+    #    data = {
+    #        "type": "A",
+    #        "name": record_name,
+    #        "content": ip,
+    #        "ttl": 1,
+    #        "proxied": False
+    #    }
+    #    response = requests.post(f'https://api.cloudflare.com/client/v4/zones/{zone_id}/dns_records', json=data, headers=headers)
+    #    if response.status_code == 200:
+    #        print(f"Add {subdomain}:{ip}")
+    #    else:
+    #        print(f"Failed to add A record for IP {ip} to subdomain {subdomain}: {response.status_code} {response.text}")
 
 if __name__ == "__main__":
     api_token = os.getenv('CF_API_TOKEN')
