@@ -43,7 +43,7 @@ def update_cloudflare_dns(ip_list, api_token, zone_id, subdomain, domain):
     record_name = domain if subdomain == '@' else f'{subdomain}.{domain}'
     if ip_list:
         ip = ip_list[0]
-         data = {
+        data = {
             "type": "A",
             "name": record_name,
             "content": ip,
